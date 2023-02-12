@@ -89,10 +89,10 @@ class MinesweeperEnv(gym.Env):
         self.num_mines = num_mines
         self.board = place_mines(board_size, num_mines)
         self.my_board = np.ones((board_size, board_size), dtype=int) * CLOSED
-        self.valid_actions = np.ones((self.board_size, self.board_size), dtype=np.bool)
+        self.valid_actions = np.ones((self.board_size, self.board_size), dtype=bool)
 
         self.observation_space = spaces.Box(low=-2, high=9,
-                                            shape=(self.board_size, self.board_size), dtype=np.int)
+                                            shape=(self.board_size, self.board_size), dtype=int)
         self.action_space = spaces.MultiDiscrete([self.board_size, self.board_size])
 
     def count_neighbour_mines(self, x, y):
@@ -129,8 +129,8 @@ class MinesweeperEnv(gym.Env):
             S.E --> South - East(row + 1, col + 1)
             S.W --> South - West(row + 1, col - 1)
         """
-        for _x in range(x-1, x+2):
-            for _y in range(y-1, y+2):
+        for _x in range(x - 1, x + 2):
+            for _y in range(y - 1, y + 2):
                 if is_valid(_x, _y):
                     if is_new_move(my_board, _x, _y):
                         my_board[_x, _y] = self.count_neighbour_mines(_x, _y)
@@ -272,7 +272,7 @@ class MinesweeperDiscreetEnv(gym.Env):
 
         self.observation_space = spaces.Box(low=-2, high=9,
                                             shape=(self.board_size, self.board_size), dtype=np.int)
-        self.action_space = spaces.Discrete(self.board_size*self.board_size)
+        self.action_space = spaces.Discrete(self.board_size * self.board_size)
         self.valid_actions = np.ones((self.board_size * self.board_size), dtype=np.bool)
 
     def count_neighbour_mines(self, x, y):
@@ -309,8 +309,8 @@ class MinesweeperDiscreetEnv(gym.Env):
             S.E --> South - East(row + 1, col + 1)
             S.W --> South - West(row + 1, col - 1)
         """
-        for _x in range(x-1, x+2):
-            for _y in range(y-1, y+2):
+        for _x in range(x - 1, x + 2):
+            for _y in range(y - 1, y + 2):
                 if is_valid(_x, _y):
                     if is_new_move(my_board, _x, _y):
                         my_board[_x, _y] = self.count_neighbour_mines(_x, _y)
@@ -433,3 +433,8 @@ class MinesweeperDiscreetEnv(gym.Env):
         outfile.write(s)
         if mode != 'human':
             return outfile
+
+
+# main
+ENV = MinesweeperEnv(10, 10)
+ENV.render(mode="human")
